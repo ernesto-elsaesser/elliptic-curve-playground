@@ -1,5 +1,7 @@
 This is an Xcode Playground to play around with elliptic curve algebra. It requires Xcode to run.
 
+[View code](https://github.com/ernesto-elsaesser/elliptic-curve-playground/blob/master/ECC.playground/Contents.swift)
+
 Sample usage:
 
 ```swift
