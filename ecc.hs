@@ -13,6 +13,9 @@ instance Applicative EC where
 instance Monad EC where
     (EC e) >>= f = EC (\c -> let EC e' = f (e c) in e' c)
 
+runEC :: EC a -> ECConf -> a
+runEC (EC e) c = e c
+
 -------------------------------
 
 data CurvePoint = Point Int Int | Infinity deriving Eq
@@ -29,7 +32,7 @@ findPoints p a b = let
     in [ Point x y | x<-xs, y<-xs, fy y == fx x ]
 
 allPoints :: EC [CurvePoint]
-allPoints = EC (\(p,b,a) -> (Infinity : (findPoints p b a)))
+allPoints = EC (\(p,a,b) -> (Infinity : (findPoints p a b)))
 
 -----------------------------
 
@@ -81,9 +84,6 @@ allSubgroups :: EC [[CurvePoint]]
 allSubgroups = allPoints >>= (collect (\p -> subgroup p p))
 
 -----------------------------
-
-runEC :: EC a -> ECConf -> a
-runEC (EC e) c = e c
 
 r1 ec = runEC ec (7,2,6)
 r2 ec = runEC ec (13,0,1)
