@@ -1,5 +1,3 @@
-import Control.Monad
-
 type ECConf = (Int, Int, Int)
 data EC a = EC (ECConf -> a)
 
@@ -64,7 +62,8 @@ addPoints p Infinity = return p
 addPoints p q = (invertPoint q) >>= (\nq -> if p == nq then return Infinity else curveOp p q)
 
 collect :: (a -> EC b) -> [a] -> EC [b]
-collect f inp = foldM (\l x -> (f x) >>= (\fx -> return (l ++ [fx]) )) [] inp
+collect f xs = (foldl prepend return xs) []
+    where prepend cont x fxs = (f x) >>= (\fx -> return (fx : fxs) ) >>= cont
 
 order :: CurvePoint -> Int -> CurvePoint -> EC Int
 order _ n Infinity = return n
